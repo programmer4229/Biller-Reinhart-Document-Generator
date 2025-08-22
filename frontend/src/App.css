@@ -1,0 +1,44 @@
+#root {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+.header {
+    text-align: center;
+    align-self: center;
+    margin-bottom: 50px;
+}
+.header-text {
+    width: auto;
+    text-align: center;
+    size: 42px;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.header-logo {
+    max-width: 200px;
+    height: auto;
+    margin-bottom: 1rem;
+}
+
+.generate_btn {
+    align-self: center;
+}
+
+.logo {
+  height: 6em;
+  padding: 1.5em;
+  will-change: filter;
+  transition: filter 300ms;
+}
+.logo.react:hover {
+  filter: drop-shadow(0 0 2em #61dafbaa);
+}
+h1, h2, h3, h4, h5, h6, p, label {
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+input {
+    margin-left: 5px;
+}
