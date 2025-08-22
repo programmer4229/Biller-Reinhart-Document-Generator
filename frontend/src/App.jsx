@@ -1,4 +1,3 @@
-// App.jsx
 import { useState } from 'react';
 import axios from 'axios';
 import logo from "./assets/logo.png";
@@ -8,7 +7,7 @@ const templates = {
   "Invitation to Bid": {
     file: "Invitation_To_Bid.docx",
     fields: [
-      "project_name", "owner_name", "street_1", "city_1", "state_1", "zip_1",
+      "project_name", "project_description", "owner_name", "street_1", "city_1", "state_1", "zip_1",
       "owner_phone", "owner_email", "date_1", "time_1",
       "engineer_name", "street_2", "city_2", "state_2", "zip_2",
       "engineer_phone", "engineer_email", "date_2", "time_2",
@@ -27,7 +26,16 @@ const templates = {
   "General Conditions": {
     file: "General_Conditions.docx",
     fields: [
-      "project_name"
+      "project_name", "completion_days", "starting_hour", "ending_hour"
+    ]
+  },
+  "Summary of Work": {
+    file: "Summary_of_Work.docx",
+    fields: [
+      "project_name", "address_1", "city_1", "state_1", "zip_1",
+      "owner_name", "address_2", "city_2", "state_2", "zip_2",
+      "owner_number", "owner_email", "date_3"
+      // Note: project_scope_items handled separately
     ]
   }
 };
@@ -35,21 +43,42 @@ const templates = {
 function App() {
   const [selectedTemplate, setSelectedTemplate] = useState("Invitation to Bid");
   const [formData, setFormData] = useState({});
+  const [scopeItems, setScopeItems] = useState([""]);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
+  const handleScopeItemChange = (index, value) => {
+    const newItems = [...scopeItems];
+    newItems[index] = value;
+    setScopeItems(newItems);
+  };
+
+  const addScopeItem = () => {
+    setScopeItems([...scopeItems, ""]);
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     const data = new FormData();
-    data.append("template_name", templates[selectedTemplate].file);
-    for (const key of templates[selectedTemplate].fields) {
+    const template = templates[selectedTemplate];
+    data.append("template_name", template.file);
+    for (const key of template.fields) {
       data.append(key, formData[key] || "");
     }
 
+    // If using Summary of Work, join scope items
+    if (selectedTemplate === "Summary of Work") {
+      const bullets = scopeItems
+        .filter(item => item.trim() !== "")
+        .map(item => `• ${item}`)
+        .join('\n');
+      data.append("project_scope_items", bullets);
+    }
+
     try {
-        const response = await axios.post('http://localhost:5050/generate', data, {
+      const response = await axios.post('http://localhost:5050/generate', data, {
         responseType: 'blob'
       });
       const url = window.URL.createObjectURL(new Blob([response.data]));
@@ -62,6 +91,41 @@ function App() {
       console.error("❌ Axios Error:", err);
       alert("Failed to generate document");
     }
+  };
+
+  const renderFields = () => {
+    const template = templates[selectedTemplate];
+    return (
+      <>
+        {template.fields.map((key) => (
+          <div key={key} className="input-group">
+            <label htmlFor={key}>{key.replace(/_/g, ' ')}</label>
+            <input
+              id={key}
+              name={key}
+              placeholder={key.replace(/_/g, ' ')}
+              onChange={handleChange}
+              required
+            />
+          </div>
+        ))}
+        {selectedTemplate === "Summary of Work" && (
+          <div className="input-group">
+            <label>Project Scope Items</label>
+            {scopeItems.map((item, index) => (
+              <input
+                key={index}
+                value={item}
+                onChange={(e) => handleScopeItemChange(index, e.target.value)}
+                placeholder={`Item ${index + 1}`}
+                required
+              />
+            ))}
+            <button type="button" onClick={addScopeItem}>+ Add Scope Item</button>
+          </div>
+        )}
+      </>
+    );
   };
 
   return (
@@ -82,18 +146,7 @@ function App() {
 
       <form onSubmit={handleSubmit} className="form">
         <h3>Inputs:</h3>
-        {templates[selectedTemplate].fields.map((key) => (
-          <div key={key} className="input-group">
-            <label htmlFor={key}>{key.replace(/_/g, ' ')}</label>
-            <input
-              id={key}
-              name={key}
-              placeholder={key.replace(/_/g, ' ')}
-              onChange={handleChange}
-              required
-            />
-          </div>
-        ))}
+        {renderFields()}
         <div className="button-container">
           <button type="submit" className="generate_btn">Generate Document</button>
         </div>
