@@ -121,7 +121,7 @@ function App() {
                 required
               />
             ))}
-            <button type="button" onClick={addScopeItem}>+ Add Scope Item</button>
+            <button type="button" onClick={addScopeItem} className="add-scope-btn">+ Add Scope Item</button>
           </div>
         )}
       </>
