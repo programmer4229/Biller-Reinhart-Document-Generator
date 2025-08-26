@@ -37,6 +37,13 @@ const templates = {
       "owner_number", "owner_email", "date_3"
       // Note: project_scope_items handled separately
     ]
+  }, 
+  "Table of Contents": {
+    file: "Table_of_Contents.docx",
+    fields: [
+        "project_name", "invitation_page_num", "instructions_page_num",
+        "tabulation_page_num", "summary_page_num", "conditions_page_num"
+    ]
   }
 };
 
@@ -121,7 +128,7 @@ function App() {
                 required
               />
             ))}
-            <button type="button" onClick={addScopeItem}>+ Add Scope Item</button>
+            <button type="button" onClick={addScopeItem} className="add-scope-btn">+ Add Scope Item</button>
           </div>
         )}
       </>

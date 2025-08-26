@@ -1,44 +1,264 @@
-#root {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
-}
-
-.header {
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  
+  body {
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+    color: #1e293b;
+    line-height: 1.6;
+  }
+  
+  #root {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 2rem 1rem;
+  }
+  
+  /* Header Styling */
+  .header {
+    background: white;
+    border-radius: 16px;
+    padding: 2rem;
+    margin-bottom: 2rem;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
     text-align: center;
-    align-self: center;
-    margin-bottom: 50px;
-}
-.header-text {
+    border: 1px solid #e2e8f0;
+  }
+  
+  .logo {
+    height: 80px;
     width: auto;
-    text-align: center;
-    size: 42px;
-    font-family: Arial, Helvetica, sans-serif;
-}
-
-.header-logo {
-    max-width: 200px;
-    height: auto;
+    margin-bottom: 1.5rem;
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+  }
+  
+  .header-text {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: #1e293b;
+    margin-bottom: 0.5rem;
+    letter-spacing: -0.025em;
+  }
+  
+  .header h3 {
+    font-size: 1.125rem;
+    color: #64748b;
     margin-bottom: 1rem;
-}
-
-.generate_btn {
-    align-self: center;
-}
-
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
-}
-h1, h2, h3, h4, h5, h6, p, label {
-    font-family: Arial, Helvetica, sans-serif;
-}
-
-input {
-    margin-left: 5px;
-}
+    font-weight: 500;
+  }
+  
+  /* Dropdown Styling */
+  .header select {
+    background: white;
+    border: 2px solid #3b82f6;
+    border-radius: 8px;
+    padding: 0.75rem 1rem;
+    font-size: 1rem;
+    color: #1e293b;
+    min-width: 250px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-weight: 500;
+  }
+  
+  .header select:hover {
+    border-color: #2563eb;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+  }
+  
+  .header select:focus {
+    outline: none;
+    border-color: #2563eb;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+  }
+  
+  /* Form Container */
+  .form {
+    background: white;
+    border-radius: 16px;
+    padding: 2rem;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    border: 1px solid #e2e8f0;
+  }
+  
+  .form h3 {
+    font-size: 1.5rem;
+    color: #1e293b;
+    margin-bottom: 1.5rem;
+    font-weight: 600;
+    border-bottom: 2px solid #3b82f6;
+    padding-bottom: 0.5rem;
+  }
+  
+  /* Input Groups */
+  .input-group {
+    margin-bottom: 1.5rem;
+  }
+  
+  .input-group label {
+    display: block;
+    font-weight: 600;
+    color: #374151;
+    margin-bottom: 0.5rem;
+    font-size: 0.875rem;
+    text-transform: capitalize;
+  }
+  
+  .input-group input {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border: 2px solid #d1d5db;
+    border-radius: 8px;
+    font-size: 1rem;
+    transition: all 0.2s ease;
+    background: white;
+    color: #1e293b;
+  }
+  
+  .input-group input:focus {
+    outline: none;
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+  }
+  
+  .input-group input:hover {
+    border-color: #9ca3af;
+  }
+  
+  .input-group input::placeholder {
+    color: #9ca3af;
+    text-transform: capitalize;
+  }
+  
+  /* Scope Items Styling */
+  .scope-section {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin-top: 1rem;
+  }
+  
+  .scope-section label {
+    color: #1e293b;
+    font-size: 1rem;
+    margin-bottom: 1rem;
+  }
+  
+  .scope-item {
+    margin-bottom: 0.75rem;
+  }
+  
+  .scope-item input {
+    margin-bottom: 0.5rem;
+  }
+  
+  .add-scope-btn {
+    background: #f3f4f6;
+    border: 2px dashed #9ca3af;
+    color: #6b7280;
+    padding: 0.75rem 1rem;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 0.875rem;
+    font-weight: 500;
+    transition: all 0.2s ease;
+    width: 100%;
+  }
+  
+  .add-scope-btn:hover {
+    background: #e5e7eb;
+    border-color: #6b7280;
+    color: #374151;
+  }
+  
+  /* Button Container */
+  .button-container {
+    margin-top: 2rem;
+    text-align: center;
+    padding-top: 1.5rem;
+    border-top: 1px solid #e2e8f0;
+  }
+  
+  /* Generate Button */
+  .generate_btn {
+    background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+    color: white;
+    border: none;
+    padding: 1rem 2rem;
+    font-size: 1.125rem;
+    font-weight: 600;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    box-shadow: 0 4px 6px -1px rgba(59, 130, 246, 0.3);
+    min-width: 200px;
+  }
+  
+  .generate_btn:hover {
+    background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+    transform: translateY(-1px);
+    box-shadow: 0 6px 8px -1px rgba(59, 130, 246, 0.4);
+  }
+  
+  .generate_btn:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 4px -1px rgba(59, 130, 246, 0.3);
+  }
+  
+  /* Responsive Design */
+  @media (max-width: 768px) {
+    #root {
+      padding: 1rem 0.5rem;
+    }
+  
+    .header {
+      padding: 1.5rem;
+    }
+  
+    .header-text {
+      font-size: 2rem;
+    }
+  
+    .form {
+      padding: 1.5rem;
+    }
+  
+    .header select {
+      min-width: 200px;
+    }
+  }
+  
+  /* Form Grid for Better Organization */
+  .form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+  }
+  
+  @media (max-width: 640px) {
+    .form-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+  
+  .form-section {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+  
+  .form-section h4 {
+    color: #1e293b;
+    font-size: 1.125rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+    border-bottom: 1px solid #e2e8f0;
+    padding-bottom: 0.5rem;
+  }
+  
