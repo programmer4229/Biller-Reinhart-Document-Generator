@@ -47,119 +47,161 @@ const templates = {
   }
 };
 
-function App() {
-  const [selectedTemplate, setSelectedTemplate] = useState("Invitation to Bid");
-  const [formData, setFormData] = useState({});
-  const [scopeItems, setScopeItems] = useState([""]);
-
-  const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
-
-  const handleScopeItemChange = (index, value) => {
-    const newItems = [...scopeItems];
-    newItems[index] = value;
-    setScopeItems(newItems);
-  };
-
-  const addScopeItem = () => {
-    setScopeItems([...scopeItems, ""]);
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    const data = new FormData();
-    const template = templates[selectedTemplate];
-    data.append("template_name", template.file);
-    for (const key of template.fields) {
-      data.append(key, formData[key] || "");
-    }
-
-    // If using Summary of Work, join scope items
-    if (selectedTemplate === "Summary of Work") {
-      const bullets = scopeItems
-        .filter(item => item.trim() !== "")
-        .map(item => `• ${item}`)
-        .join('\n');
-      data.append("project_scope_items", bullets);
-    }
-
-    try {
-      const response = await axios.post('http://localhost:5050/generate', data, {
-        responseType: 'blob'
-      });
-      const url = window.URL.createObjectURL(new Blob([response.data]));
-      const link = document.createElement('a');
-      link.href = url;
-      link.setAttribute('download', 'customized.docx');
-      document.body.appendChild(link);
-      link.click();
-    } catch (err) {
-      console.error("❌ Axios Error:", err);
-      alert("Failed to generate document");
+const engineers = {
+    "Bob Smith": {
+      engineer_name: "Bob Smith",
+      engineer_email: "bob.smith@tampaeng.com",
+      engineer_phone: "813-555-1234"
+    },
+    "Alice Johnson": {
+      engineer_name: "Alice Johnson",
+      engineer_email: "alice.johnson@tampaeng.com",
+      engineer_phone: "813-555-5678"
+    },
+    "Michael Torres": {
+      engineer_name: "Michael Torres",
+      engineer_email: "michael.torres@tampaeng.com",
+      engineer_phone: "813-555-9999"
     }
   };
 
-  const renderFields = () => {
-    const template = templates[selectedTemplate];
-    return (
-      <>
-        {template.fields.map((key) => (
-          <div key={key} className="input-group">
-            <label htmlFor={key}>{key.replace(/_/g, ' ')}</label>
-            <input
-              id={key}
-              name={key}
-              placeholder={key.replace(/_/g, ' ')}
-              onChange={handleChange}
-              required
-            />
-          </div>
-        ))}
-        {selectedTemplate === "Summary of Work" && (
-          <div className="input-group">
-            <label>Project Scope Items</label>
-            {scopeItems.map((item, index) => (
+  function App() {
+    const [selectedTemplate, setSelectedTemplate] = useState("Invitation to Bid");
+    const [selectedEngineer, setSelectedEngineer] = useState("");
+    const [formData, setFormData] = useState({});
+    const [scopeItems, setScopeItems] = useState([""]);
+  
+    const handleChange = (e) => {
+      setFormData({ ...formData, [e.target.name]: e.target.value });
+    };
+  
+    const handleScopeItemChange = (index, value) => {
+      const newItems = [...scopeItems];
+      newItems[index] = value;
+      setScopeItems(newItems);
+    };
+  
+    const addScopeItem = () => {
+      setScopeItems([...scopeItems, ""]);
+    };
+  
+    const handleEngineerChange = (e) => {
+      const engineerKey = e.target.value;
+      setSelectedEngineer(engineerKey);
+      const engineerData = engineers[engineerKey];
+      if (engineerData) {
+        setFormData((prev) => ({
+          ...prev,
+          ...engineerData
+        }));
+      }
+    };
+  
+    const handleSubmit = async (e) => {
+      e.preventDefault();
+      const data = new FormData();
+      const template = templates[selectedTemplate];
+      data.append("template_name", template.file);
+      for (const key of template.fields) {
+        data.append(key, formData[key] || "");
+      }
+  
+      if (selectedTemplate === "Summary of Work") {
+        const bullets = scopeItems
+          .filter(item => item.trim() !== "")
+          .map(item => `• ${item}`)
+          .join('\n');
+        data.append("project_scope_items", bullets);
+      }
+  
+      try {
+        const response = await axios.post('http://localhost:5050/generate', data, {
+          responseType: 'blob'
+        });
+        const url = window.URL.createObjectURL(new Blob([response.data]));
+        const link = document.createElement('a');
+        link.href = url;
+        link.setAttribute('download', 'customized.docx');
+        document.body.appendChild(link);
+        link.click();
+      } catch (err) {
+        console.error("❌ Axios Error:", err);
+        alert("Failed to generate document");
+      }
+    };
+  
+    const renderFields = () => {
+      const template = templates[selectedTemplate];
+      return (
+        <>
+          {template.fields.map((key) => (
+            <div key={key} className="input-group">
+              <label htmlFor={key}>{key.replace(/_/g, ' ')}</label>
               <input
-                key={index}
-                value={item}
-                onChange={(e) => handleScopeItemChange(index, e.target.value)}
-                placeholder={`Item ${index + 1}`}
+                id={key}
+                name={key}
+                value={formData[key] || ""}
+                placeholder={key.replace(/_/g, ' ')}
+                onChange={handleChange}
                 required
               />
-            ))}
-            <button type="button" onClick={addScopeItem} className="add-scope-btn">+ Add Scope Item</button>
-          </div>
-        )}
-      </>
-    );
-  };
-
-  return (
-    <div>
-      <div className="header">
-        <img src={logo} alt="Logo" className="logo" />
-        <h1 className='header-text'>Engineering Doc Generator</h1>
-        <h3>Choose Your Document:</h3>
-        <select
-          value={selectedTemplate}
-          onChange={(e) => setSelectedTemplate(e.target.value)}
-        >
-          {Object.keys(templates).map((name) => (
-            <option key={name} value={name}>{name}</option>
+            </div>
           ))}
-        </select>
-      </div>
-
-      <form onSubmit={handleSubmit} className="form">
-        <h3>Inputs:</h3>
-        {renderFields()}
-        <div className="button-container">
-          <button type="submit" className="generate_btn">Generate Document</button>
+          {selectedTemplate === "Summary of Work" && (
+            <div className="input-group">
+              <label>Project Scope Items</label>
+              {scopeItems.map((item, index) => (
+                <input
+                  key={index}
+                  value={item}
+                  onChange={(e) => handleScopeItemChange(index, e.target.value)}
+                  placeholder={`Item ${index + 1}`}
+                  required
+                />
+              ))}
+              <button type="button" onClick={addScopeItem} className="add-scope-btn">+ Add Scope Item</button>
+            </div>
+          )}
+        </>
+      );
+    };
+  
+    return (
+      <div>
+        <div className="header">
+          <img src={logo} alt="Logo" className="logo" />
+          <h1 className='header-text'>Engineering Doc Generator</h1>
+          <h3>Choose Your Document:</h3>
+          <select
+            value={selectedTemplate}
+            onChange={(e) => setSelectedTemplate(e.target.value)}
+          >
+            {Object.keys(templates).map((name) => (
+              <option key={name} value={name}>{name}</option>
+            ))}
+          </select>
+  
+          <h3 style={{ marginTop: "1rem" }}>Choose Engineer:</h3>
+          <select
+            value={selectedEngineer}
+            onChange={handleEngineerChange}
+          >
+            <option value="">-- Select Engineer --</option>
+            {Object.keys(engineers).map((name) => (
+              <option key={name} value={name}>{name}</option>
+            ))}
+          </select>
         </div>
-      </form>
-    </div>
-  );
-}
-
-export default App;
+  
+        <form onSubmit={handleSubmit} className="form">
+          <h3>Inputs:</h3>
+          {renderFields()}
+          <div className="button-container">
+            <button type="submit" className="generate_btn">Generate Document</button>
+          </div>
+        </form>
+      </div>
+    );
+  }
+  
+  export default App;
