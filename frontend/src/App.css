@@ -1,3 +1,4 @@
+/* Complete redesign with professional styling and Biller Reinhart blue branding */
 * {
     margin: 0;
     padding: 0;
@@ -157,22 +158,28 @@
   }
   
   .add-scope-btn {
-    background: #f3f4f6;
-    border: 2px dashed #9ca3af;
-    color: #6b7280;
-    padding: 0.75rem 1rem;
+    background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+    color: white;
+    border: none;
+    padding: 0.5rem 1rem;
     border-radius: 8px;
     cursor: pointer;
     font-size: 0.875rem;
     font-weight: 500;
     transition: all 0.2s ease;
+    box-shadow: 0 2px 4px -1px rgba(59, 130, 246, 0.3);
     width: 100%;
   }
   
   .add-scope-btn:hover {
-    background: #e5e7eb;
-    border-color: #6b7280;
-    color: #374151;
+    background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 6px -1px rgba(59, 130, 246, 0.4);
+  }
+  
+  .add-scope-btn:active {
+    transform: translateY(0);
+    box-shadow: 0 1px 2px -1px rgba(59, 130, 246, 0.3);
   }
   
   /* Button Container */
