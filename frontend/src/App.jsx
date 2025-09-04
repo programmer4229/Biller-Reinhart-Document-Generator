@@ -79,18 +79,40 @@ const templates = {
       "owner_number",
       "owner_email",
       "date_3",
-      // Note: project_scope_items handled separately
     ],
+  },
+}
+
+const engineerDirectory = {
+  "Bob Smith": {
+    engineer_name: "Bob Smith",
+    engineer_email: "bob@firm.com",
+    engineer_phone: "555-123-4567",
+  },
+  "Alice Johnson": {
+    engineer_name: "Alice Johnson",
+    engineer_email: "alice@firm.com",
+    engineer_phone: "555-987-6543",
   },
 }
 
 function App() {
   const [selectedTemplate, setSelectedTemplate] = useState("Invitation to Bid")
+  const [selectedEngineer, setSelectedEngineer] = useState("")
   const [formData, setFormData] = useState({})
   const [scopeItems, setScopeItems] = useState([""])
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value })
+  }
+
+  const handleEngineerChange = (e) => {
+    const selected = e.target.value
+    setSelectedEngineer(selected)
+    if (engineerDirectory[selected]) {
+      const engineerInfo = engineerDirectory[selected]
+      setFormData((prev) => ({ ...prev, ...engineerInfo }))
+    }
   }
 
   const handleScopeItemChange = (index, value) => {
@@ -103,21 +125,29 @@ function App() {
     setScopeItems([...scopeItems, ""])
   }
 
+  const to12Hour = (time24) => {
+    if (!time24) return ""
+    const [hour, minute] = time24.split(":")
+    const h = parseInt(hour)
+    const ampm = h >= 12 ? "PM" : "AM"
+    const hr = h % 12 || 12
+    return `${hr}:${minute} ${ampm}`
+  }
+
   const handleSubmit = async (e) => {
     e.preventDefault()
     const data = new FormData()
     const template = templates[selectedTemplate]
     data.append("template_name", template.file)
+
     for (const key of template.fields) {
-      data.append(key, formData[key] || "")
+      let value = formData[key] || ""
+      if (key.includes("time") && value) value = to12Hour(value)
+      data.append(key, value)
     }
 
-    // If using Summary of Work, join scope items
     if (selectedTemplate === "Summary of Work") {
-      const bullets = scopeItems
-        .filter((item) => item.trim() !== "")
-        .map((item) => `• ${item}`)
-        .join("\n")
+      const bullets = scopeItems.filter(Boolean).map((item) => `• ${item}`).join("\n")
       data.append("project_scope_items", bullets)
     }
 
@@ -140,34 +170,19 @@ function App() {
   const renderFields = () => {
     const template = templates[selectedTemplate]
 
-    const projectFields = template.fields.filter(
-      (field) =>
-        field.includes("project_") ||
-        field === "completion_days" ||
-        field === "starting_hour" ||
-        field === "ending_hour",
+    const projectFields = template.fields.filter((f) =>
+      ["project_", "completion_days", "starting_hour", "ending_hour"].some((k) => f.includes(k))
     )
-
-    const ownerFields = template.fields.filter(
-      (field) =>
-        field.includes("owner_") || (field.includes("_1") && !field.includes("date_1") && !field.includes("time_1")),
+    const ownerFields = template.fields.filter((f) =>
+      f.includes("owner_") || (f.includes("_1") && !f.includes("date_1") && !f.includes("time_1"))
     )
-
-    const engineerFields = template.fields.filter(
-      (field) => field.includes("engineer_") || field.includes("_2") || field.includes("address_2"),
+    const engineerFields = template.fields.filter((f) =>
+      f.includes("engineer_") || f.includes("_2") || f.includes("address_2")
     )
-
-    const dateTimeFields = template.fields.filter((field) => field.includes("date_") || field.includes("time_"))
-
-    const locationFields = template.fields.filter((field) => field.includes("prebid_location") || field.includes("_3"))
-
+    const dateTimeFields = template.fields.filter((f) => f.includes("date_") || f.includes("time_"))
+    const locationFields = template.fields.filter((f) => f.includes("prebid_location") || f.includes("_3"))
     const otherFields = template.fields.filter(
-      (field) =>
-        !projectFields.includes(field) &&
-        !ownerFields.includes(field) &&
-        !engineerFields.includes(field) &&
-        !dateTimeFields.includes(field) &&
-        !locationFields.includes(field),
+      (f) => ![...projectFields, ...ownerFields, ...engineerFields, ...dateTimeFields, ...locationFields].includes(f)
     )
 
     return (
@@ -207,7 +222,14 @@ function App() {
               {engineerFields.map((key) => (
                 <div key={key} className="input-group">
                   <label htmlFor={key}>{key.replace(/_/g, " ")}</label>
-                  <input id={key} name={key} placeholder={key.replace(/_/g, " ")} onChange={handleChange} required />
+                  <input
+                    id={key}
+                    name={key}
+                    value={formData[key] || ""}
+                    placeholder={key.replace(/_/g, " ")}
+                    onChange={handleChange}
+                    required
+                  />
                 </div>
               ))}
             </div>
@@ -224,7 +246,8 @@ function App() {
                   <input
                     id={key}
                     name={key}
-                    type={key.includes("date") ? "date" : key.includes("time") ? "time" : "text"}
+                    type={key.includes("date") ? "date" : "time"}
+                    value={formData[key] || ""}
                     placeholder={key.replace(/_/g, " ")}
                     onChange={handleChange}
                     required
@@ -296,6 +319,15 @@ function App() {
         <h3>Choose Your Document:</h3>
         <select value={selectedTemplate} onChange={(e) => setSelectedTemplate(e.target.value)}>
           {Object.keys(templates).map((name) => (
+            <option key={name} value={name}>
+              {name}
+            </option>
+          ))}
+        </select>
+        <h3 style={{ marginTop: "1rem" }}>Choose Engineer:</h3>
+        <select value={selectedEngineer} onChange={handleEngineerChange}>
+          <option value="">-- Select Engineer --</option>
+          {Object.keys(engineerDirectory).map((name) => (
             <option key={name} value={name}>
               {name}
             </option>
