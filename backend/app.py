@@ -13,11 +13,16 @@ TEMPLATE_DIR = os.path.join(os.path.dirname(__file__), "templates")
 # Serve React App Routes
 @app.route('/')
 def serve():
+    if build_folder is None:
+        return "<h1>Build folder not found. Check deployment logs.</h1>"
     return send_from_directory(app.static_folder, 'index.html')
 
 @app.route('/<path:path>')
 def serve_static(path):
-    if path != "" and os.path.exists(app.static_folder + '/' + path):
+    if build_folder is None:
+        return "<h1>Build folder not found. Check deployment logs.</h1>"
+    
+    if path != "" and os.path.exists(os.path.join(app.static_folder, path)):
         return send_from_directory(app.static_folder, path)
     else:
         return send_from_directory(app.static_folder, 'index.html')
