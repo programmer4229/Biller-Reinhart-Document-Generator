@@ -1,15 +1,28 @@
-from flask import Flask, request, send_file
+from flask import Flask, request, send_file, send_from_directory
 from flask_cors import CORS
 from docx import Document
 import os
 import tempfile
-import re
 
-app = Flask(__name__)
+# Configure Flask to serve React build files
+app = Flask(__name__, static_folder='../frontend/build', static_url_path='/')
 CORS(app)
 
 TEMPLATE_DIR = os.path.join(os.path.dirname(__file__), "templates")
 
+# Serve React App Routes
+@app.route('/')
+def serve():
+    return send_from_directory(app.static_folder, 'index.html')
+
+@app.route('/<path:path>')
+def serve_static(path):
+    if path != "" and os.path.exists(app.static_folder + '/' + path):
+        return send_from_directory(app.static_folder, path)
+    else:
+        return send_from_directory(app.static_folder, 'index.html')
+
+# Helper Functions
 def has_placeholders(text, replacements):
     """Check if text contains any placeholder tags that need replacement"""
     for key in replacements.keys():
@@ -60,6 +73,7 @@ def replace_text_in_header_footer(section, replacements):
     for table in section.footer.tables:
         replace_text_in_table(table, replacements)
 
+# API Routes
 @app.route("/generate", methods=["POST"])
 def generate_doc():
     template_name = request.form.get("template_name")
@@ -86,7 +100,8 @@ def generate_doc():
         doc.save(tmp.name)
         tmp_path = tmp.name
 
-    return send_file(tmp_path, as_attachment=True, download_name="${template_name}.docx")
+    return send_file(tmp_path, as_attachment=True, download_name="customized.docx")
 
 if __name__ == "__main__":
-    app.run(debug=True, port=5050)
+    port = int(os.environ.get("PORT", 5050))
+    app.run(debug=False, host="0.0.0.0", port=port)

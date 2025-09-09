@@ -115,7 +115,7 @@ const engineers = {
       }
   
       try {
-        const response = await axios.post('http://localhost:5050/generate', data, {
+        const response = await axios.post('/generate', data, {
           responseType: 'blob'
         });
         const url = window.URL.createObjectURL(new Blob([response.data]));
