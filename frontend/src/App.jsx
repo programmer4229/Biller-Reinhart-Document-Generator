@@ -4,8 +4,8 @@ import logo from "./assets/logo.png";
 import './App.css';
 
 const templates = {
-  "Invitation to Bid": {
-    file: "Invitation_To_Bid.docx",
+  "00100-Invitation to Bid": {
+    file: "00100-Invitation_To_Bid.docx",
     fields: [
       "project_name", "project_description", "owner_name", "street_1", "city_1", "state_1", "zip_1",
       "owner_phone", "owner_email", "date_1", "time_1",
@@ -14,8 +14,8 @@ const templates = {
       "prebid_location", "street_3", "city_3", "state_3", "zip_3"
     ]
   },
-  "Instruction to Bidders": {
-    file: "Instruction_To_Bidders.docx",
+  "00200-Instruction to Bidders": {
+    file: "00200-Instruction_To_Bidders.docx",
     fields: [
       "project_name", "project_description", "owner_name", "street_1", "city_1", "state_1", "zip_1",
       "owner_phone", "owner_email", "date_1", "time_1",
@@ -23,14 +23,14 @@ const templates = {
       "engineer_phone", "engineer_email"
     ]
   },
-  "General Conditions": {
-    file: "General_Conditions.docx",
+  "01210-General Conditions": {
+    file: "01210-General_Conditions.docx",
     fields: [
       "project_name", "completion_days", "starting_hour", "ending_hour"
     ]
   },
-  "Summary of Work": {
-    file: "Summary_of_Work.docx",
+  "01010-Summary of Work": {
+    file: "01010-Summary_of_Work.docx",
     fields: [
       "project_name", "address_1", "city_1", "state_1", "zip_1",
       "owner_name", "address_2", "city_2", "state_2", "zip_2",
@@ -38,8 +38,8 @@ const templates = {
       // Note: project_scope_items handled separately
     ]
   }, 
-  "Table of Contents": {
-    file: "Table_of_Contents.docx",
+  "00011-Table of Contents": {
+    file: "00011-Table_of_Contents.docx",
     fields: [
         "project_name", "invitation_page_num", "instructions_page_num",
         "tabulation_page_num", "summary_page_num", "conditions_page_num"
@@ -66,7 +66,7 @@ const engineers = {
   };
 
   function App() {
-    const [selectedTemplate, setSelectedTemplate] = useState("Invitation to Bid");
+    const [selectedTemplate, setSelectedTemplate] = useState("00100-Invitation to Bid");
     const [selectedEngineer, setSelectedEngineer] = useState("");
     const [formData, setFormData] = useState({});
     const [scopeItems, setScopeItems] = useState([""]);
@@ -106,7 +106,7 @@ const engineers = {
         data.append(key, formData[key] || "");
       }
   
-      if (selectedTemplate === "Summary of Work") {
+      if (selectedTemplate === "01010-Summary of Work") {
         const bullets = scopeItems
           .filter(item => item.trim() !== "")
           .map(item => `• ${item}`)
@@ -121,7 +121,7 @@ const engineers = {
         const url = window.URL.createObjectURL(new Blob([response.data]));
         const link = document.createElement('a');
         link.href = url;
-        link.setAttribute('download', 'customized.docx');
+        link.setAttribute('download', `${selectedTemplate}.docx`);
         document.body.appendChild(link);
         link.click();
       } catch (err) {
@@ -147,7 +147,7 @@ const engineers = {
               />
             </div>
           ))}
-          {selectedTemplate === "Summary of Work" && (
+          {selectedTemplate === "01010-Summary of Work" && (
             <div className="input-group">
               <label>Project Scope Items</label>
               {scopeItems.map((item, index) => (

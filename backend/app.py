@@ -86,7 +86,7 @@ def generate_doc():
         doc.save(tmp.name)
         tmp_path = tmp.name
 
-    return send_file(tmp_path, as_attachment=True, download_name="customized.docx")
+    return send_file(tmp_path, as_attachment=True, download_name="${template_name}.docx")
 
 if __name__ == "__main__":
     app.run(debug=True, port=5050)
