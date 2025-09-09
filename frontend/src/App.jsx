@@ -171,7 +171,7 @@ const engineers = {
         <div className="header">
           <img src={logo} alt="Logo" className="logo" />
           <h1 className='header-text'>Engineering Doc Generator</h1>
-          <h2>Important: Please close this tab when not in use conserve server resources</h2>
+          <h2>Important: Please close this tab when not in use to conserve server resources</h2>
           <h3>Choose Your Document:</h3>
           <select
             value={selectedTemplate}
