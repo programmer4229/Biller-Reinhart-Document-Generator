@@ -35,6 +35,7 @@ const templates = {
       "project_name", "address_1", "city_1", "state_1", "zip_1",
       "owner_name", "address_2", "city_2", "state_2", "zip_2",
       "owner_number", "owner_email", "date_3"
+      // Note: project_scope_items handled separately
     ]
   }, 
   "Table of Contents": {
@@ -64,27 +65,23 @@ const engineers = {
     }
 };
 
-// Login Component
+// Simple Login Component
 function LoginScreen({ onLogin }) {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
-  const handleLogin = async (e) => {
+  const handleLogin = (e) => {
     e.preventDefault();
     setIsLoading(true);
     setError('');
 
-    try {
-      // Send password to backend for verification
-      const response = await axios.post('/login', { password });
-      if (response.data.success) {
-        // Store authentication token in memory
-        onLogin(response.data.token);
-      } else {
-        setError('Invalid password');
-      }
-    } catch (err) {
+    // Simple client-side password check (you can change this password)
+    const correctPassword = "BillerReinhart2025!";
+    
+    if (password === correctPassword) {
+      onLogin();
+    } else {
       setError('Invalid password');
     }
     setIsLoading(false);
@@ -126,7 +123,6 @@ function LoginScreen({ onLogin }) {
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [authToken, setAuthToken] = useState(null);
   const [selectedTemplate, setSelectedTemplate] = useState("Invitation to Bid");
   const [selectedEngineer, setSelectedEngineer] = useState("");
   const [formData, setFormData] = useState({});
@@ -134,24 +130,20 @@ function App() {
 
   // Check if user is already authenticated
   useEffect(() => {
-    const token = sessionStorage.getItem('authToken');
-    if (token) {
-      setAuthToken(token);
+    const isLoggedIn = sessionStorage.getItem('isAuthenticated');
+    if (isLoggedIn === 'true') {
       setIsAuthenticated(true);
     }
   }, []);
 
-  const handleLogin = (token) => {
-    setAuthToken(token);
+  const handleLogin = () => {
     setIsAuthenticated(true);
-    // Store in session storage (cleared when browser closes)
-    sessionStorage.setItem('authToken', token);
+    sessionStorage.setItem('isAuthenticated', 'true');
   };
 
   const handleLogout = () => {
     setIsAuthenticated(false);
-    setAuthToken(null);
-    sessionStorage.removeItem('authToken');
+    sessionStorage.removeItem('isAuthenticated');
   };
 
   const handleChange = (e) => {
@@ -180,15 +172,12 @@ function App() {
     }
   };
 
+  // ORIGINAL document generation code - unchanged
   const handleSubmit = async (e) => {
     e.preventDefault();
     const data = new FormData();
     const template = templates[selectedTemplate];
     data.append("template_name", template.file);
-    
-    // Add auth token to request
-    data.append("auth_token", authToken);
-    
     for (const key of template.fields) {
       data.append(key, formData[key] || "");
     }
@@ -212,13 +201,8 @@ function App() {
       document.body.appendChild(link);
       link.click();
     } catch (err) {
-      console.error("Error:", err);
-      if (err.response?.status === 401) {
-        alert("Session expired. Please log in again.");
-        handleLogout();
-      } else {
-        alert("Failed to generate document");
-      }
+      console.error("⚠ Axios Error:", err);
+      alert("Failed to generate document");
     }
   };
 
@@ -263,7 +247,7 @@ function App() {
     return <LoginScreen onLogin={handleLogin} />;
   }
 
-  // Show main app if authenticated
+  // ORIGINAL main app code - unchanged
   return (
     <div>
       <div className="header">
