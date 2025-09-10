@@ -72,7 +72,7 @@ function App() {
   const [authenticated, setAuthenticated] = useState(false);
   const [passwordInput, setPasswordInput] = useState("");
 
-  const correctPassword = "engineer123"; // Change as needed
+  const correctPassword = "BillerReinhart"; // Change as needed
 
   const handlePasswordSubmit = (e) => {
     e.preventDefault();
@@ -199,7 +199,7 @@ function App() {
         <h1>Engineering Doc Generator</h1>
         <p>Enter password to access the application</p>
         
-        <form onSubmit={handleLogin}>
+        <form onSubmit={handlePasswordSubmit}>
           <div className="login-input-group">
             <input
               type="password"
