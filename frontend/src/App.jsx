@@ -77,7 +77,7 @@ function LoginScreen({ onLogin }) {
 
     try {
       // Send password to backend for verification
-      const response = await axios.post('/api/login', { password });
+      const response = await axios.post('/login', { password });
       if (response.data.success) {
         // Store authentication token in memory
         onLogin(response.data.token);

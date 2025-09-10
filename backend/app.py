@@ -69,7 +69,7 @@ else:
     print("⚠️  Flask running in API-only mode")
 
 # Authentication Routes
-@app.route('/api/login', methods=['POST'])
+@app.route('/login', methods=['POST'])
 def login():
     try:
         data = request.get_json()
