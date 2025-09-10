@@ -180,19 +180,46 @@ function App() {
 
   if (!authenticated) {
     return (
-      <div className="password-screen">
-        <h2>Enter Password to Access Document Generator</h2>
-        <form onSubmit={handlePasswordSubmit}>
-          <input
-            type="password"
-            value={passwordInput}
-            onChange={(e) => setPasswordInput(e.target.value)}
-            placeholder="Enter password"
-            required
-          />
-          <button type="submit">Unlock</button>
+    //   <div className="password-screen">
+    //     <h2>Enter Password to Access Document Generator</h2>
+    //     <form onSubmit={handlePasswordSubmit}>
+    //       <input
+    //         type="password"
+    //         value={passwordInput}
+    //         onChange={(e) => setPasswordInput(e.target.value)}
+    //         placeholder="Enter password"
+    //         required
+    //       />
+    //       <button type="submit">Unlock</button>
+    //     </form>
+    //   </div>
+    <div className="login-container">
+      <div className="login-box">
+        <img src={logo} alt="Logo" className="login-logo" />
+        <h1>Engineering Doc Generator</h1>
+        <p>Enter password to access the application</p>
+        
+        <form onSubmit={handleLogin}>
+          <div className="login-input-group">
+            <input
+              type="password"
+              value={passwordInput}
+              onChange={(e) => setPasswordInput(e.target.value)}
+              placeholder="Enter password"
+              required
+            />
+          </div>
+          
+          {error && <div className="error-message">{error}</div>}
+          
+          <button 
+            type="submit" 
+            className="login-btn"
+          >
+          </button>
         </form>
       </div>
+    </div>
     );
   }
 
