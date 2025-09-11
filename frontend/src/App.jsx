@@ -196,7 +196,7 @@ function App() {
     <div className="login-container">
       <div className="login-box">
         <img src={logo} alt="Logo" className="login-logo" />
-        <h1>Engineering Doc Generator</h1>
+        <h1>Project Manual Generator</h1>
         <p>Enter password to access the application</p>
         
         <form onSubmit={handlePasswordSubmit}>
@@ -227,7 +227,7 @@ function App() {
     <div>
       <div className="header">
         <img src={logo} alt="Logo" className="logo" />
-        <h1 className='header-text'>Engineering Doc Generator</h1>
+        <h1 className='header-text'>Project Manual Generator</h1>
         <h2>Important: Please close this tab when not in use to conserve server resources</h2>
         <h3>Choose Your Document:</h3>
         <select
