@@ -72,7 +72,7 @@ function App() {
   const [authenticated, setAuthenticated] = useState(false);
   const [passwordInput, setPasswordInput] = useState("");
 
-  const correctPassword = "BillerReinhart"; // Change as needed
+  const correctPassword = "BillerReinhart2025"; // Change as needed
 
   const handlePasswordSubmit = (e) => {
     e.preventDefault();
