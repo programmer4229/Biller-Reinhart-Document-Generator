@@ -56,7 +56,7 @@ else:
 
 # Routes
 # Replace with your own strong password
-CORRECT_PASSWORD = "BillerReinhart"
+CORRECT_PASSWORD = "BillerReinhart2025"
 
 @app.route("/auth", methods=["POST"])
 def auth():
